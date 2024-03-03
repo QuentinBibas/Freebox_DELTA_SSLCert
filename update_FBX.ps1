@@ -88,7 +88,7 @@ $Driver.FindElementByXPath($Xpath).Click()
 $Xpath = '/html/body/div[1]/div[8]/div[2]/div/div[2]/div[9]/div/span/div/table[1]/tbody/tr/td[2]/table/tbody/tr/td[2]'
 $Driver.FindElementByXPath($Xpath).Click()
 ########## change the following line to 
-$Xpath ="//*[text()=$certtype]"
+$Xpath ="//*[text()='$certtype']"
 $Driver.FindElementByXPath($Xpath).Click()
 
 #### certificate data (public key)
