@@ -1,15 +1,16 @@
-###########################################
-#             update_box.ps1              #
-#    update Freebox domain certificate    #
-#       relies on Selenium and Chrome     #
-#    this considers using an ECDSA cert   #
-#                                         #
-#  v1.1                      18/04/2024   #
-###########################################
+#################################################################################
+#                                update_box.ps1                                 #
+#    updates the Freebox DELTA domain certificate from the web GUI              #
+#       relies on Selenium and Chrome                                           #
+#       c:\temp must exist with read/write rights for the script user           #
+#    this considers using an ECDSA cert, obtained through Win-ACME              #
+#                                                                               #
+#  v1.1                                                          18/04/2024     #
+#################################################################################
 
 ######### settings ####################
 $certlocation = "C:\WACS\PEM_Certs\" # location where the certificate is created  
-$freeboxUI = "http://1.2.3.4" # IP of the Freebox UI
+$freeboxUI = "http://1.2.3.4" # IP of the Freebox UI < must use http and IP since we must remove the existing cert to update it through the GUI
 $domain = "box.example.com" # the FQDN you're using for your freebox - beware, this script relies on the fact that the certificate files are named after that FQDN !
 $freeboxpassword = 'PA$$WORD' # password of the admin console for the freebox
 #$chromedriverpath = "C:\WACS\Scripts\ChromeDriver\" # path to your chromedriver binary
