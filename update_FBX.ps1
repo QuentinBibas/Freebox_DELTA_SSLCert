@@ -4,7 +4,7 @@
 #       relies on Selenium and Chrome     #
 #    this considers using an ECDSA cert   #
 #                                         #
-#  v1.0                      22/02/2024   #
+#  v1.1                      18/04/2024   #
 ###########################################
 
 ######### settings ####################
@@ -12,10 +12,23 @@ $certlocation = "C:\WACS\PEM_Certs\" # location where the certificate is created
 $freeboxUI = "http://1.2.3.4" # IP of the Freebox UI
 $domain = "box.example.com" # the FQDN you're using for your freebox - beware, this script relies on the fact that the certificate files are named after that FQDN !
 $freeboxpassword = 'PA$$WORD' # password of the admin console for the freebox
-$chromedriverpath = "C:\WACS\Scripts\ChromeDriver\" # path to your chromedriver binary
+#$chromedriverpath = "C:\WACS\Scripts\ChromeDriver\" # path to your chromedriver binary
 $certtype = "ECDSA" # can be either ECDSA or RSA on the latest to-date Freebox DELTA
+$chromeJSONURI = "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json" # the URI where the chrome JSON is located
 
 ######### routine ######################
+# keep chromedriver up to date
+#Install Latest Version of Selenium
+Install-Module Selenium -Force
+# Find the latest ChromeDriver release for Win64 from the chrome JSON
+$driverJSON = Invoke-WebRequest -Uri "$chromeJSONURI" | ConvertFrom-Json
+$fullURL = $($driverJSON.channels.Stable.downloads.chromedriver | Where-Object { $_.platform -eq "win64"}).url
+Invoke-WebRequest -Uri $fullURL -OutFile "C:\temp\$(Split-Path $fullURL -leaf)"
+# Expand the archive
+Expand-Archive -LiteralPath "C:\temp\$(Split-Path $fullURL -leaf)" -DestinationPath "c:\temp\" -Force
+# Set chromedriverpath to downloaded folder
+$chromedriverpath= $(Get-ChildItem -Path c:\temp -Recurse -Filter "chromedriver.exe" | % { $_.DirectoryName })
+
 # generate certificate names / find the latest ones
 $pubkey= $(Get-ChildItem $certlocation | Where-Object { $_.Name -match "crt" } | sort).FullName
 $chain= $(Get-ChildItem $certlocation | Where-Object { $_.Name -match "chain-only" } | sort).FullName
@@ -121,5 +134,8 @@ $Driver.FindElementByXPath($Xpath).Click()
 
 $Driver.Close()
 $Driver.Quit()
+
+# clean c:\tmp before exiting
+Get-ChildItem -Path "c:\temp" -Name "chromedriver*" | Remove-Item
 
 exit
