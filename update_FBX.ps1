@@ -136,6 +136,6 @@ $Driver.Close()
 $Driver.Quit()
 
 # clean c:\tmp before exiting
-Get-ChildItem -Path "c:\temp" -Name "chromedriver*" | Remove-Item
+Get-ChildItem -Path "c:\temp" -Filter "chromedriver*" | Remove-Item -Recurse -Force
 
 exit
