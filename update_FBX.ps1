@@ -18,17 +18,19 @@ $certtype = "ECDSA" # can be either ECDSA or RSA on the latest to-date Freebox D
 $chromeJSONURI = "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json" # the URI where the chrome JSON is located
 
 ######### routine ######################
-# keep chromedriver up to date
-#Install Latest Version of Selenium
-Install-Module Selenium -Force
-# Find the latest ChromeDriver release for Win64 from the chrome JSON
-$driverJSON = Invoke-WebRequest -Uri "$chromeJSONURI" | ConvertFrom-Json
-$fullURL = $($driverJSON.channels.Stable.downloads.chromedriver | Where-Object { $_.platform -eq "win64"}).url
-Invoke-WebRequest -Uri $fullURL -OutFile "C:\temp\$(Split-Path $fullURL -leaf)"
-# Expand the archive
-Expand-Archive -LiteralPath "C:\temp\$(Split-Path $fullURL -leaf)" -DestinationPath "c:\temp\" -Force
-# Set chromedriverpath to downloaded folder
-$chromedriverpath= $(Get-ChildItem -Path c:\temp -Recurse -Filter "chromedriver.exe" | % { $_.DirectoryName })
+# keep chromedriver up to date if $chromedriverpath is not set
+if (($chromedriverpath -eq $null) -or ($chromedriverpath -eq "")) {
+    #Install Latest Version of Selenium
+    Install-Module Selenium -Force
+    # Find the latest ChromeDriver release for Win64 from the chrome JSON
+    $driverJSON = Invoke-WebRequest -Uri "$chromeJSONURI" | ConvertFrom-Json
+    $fullURL = $($driverJSON.channels.Stable.downloads.chromedriver | Where-Object { $_.platform -eq "win64"}).url
+    Invoke-WebRequest -Uri $fullURL -OutFile "C:\temp\$(Split-Path $fullURL -leaf)"
+    # Expand the archive
+    Expand-Archive -LiteralPath "C:\temp\$(Split-Path $fullURL -leaf)" -DestinationPath "c:\temp\" -Force
+    # Set chromedriverpath to downloaded folder
+    $chromedriverpath= $(Get-ChildItem -Path c:\temp -Recurse -Filter "chromedriver.exe" | % { $_.DirectoryName })
+}
 
 # generate certificate names / find the latest ones
 $pubkey= $(Get-ChildItem $certlocation | Where-Object { $_.Name -match "crt" } | sort).FullName
