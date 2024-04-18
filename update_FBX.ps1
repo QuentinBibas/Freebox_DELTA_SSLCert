@@ -14,7 +14,7 @@ $freeboxUI = "http://1.2.3.4" # IP of the Freebox UI < must use http and IP sinc
 $domain = "box.example.com" # the FQDN you're using for your freebox - beware, this script relies on the fact that the certificate files are named after that FQDN !
 $freeboxpassword = 'PA$$WORD' # password of the admin console for the freebox
 #$chromedriverpath = "C:\WACS\Scripts\ChromeDriver\" # path to your chromedriver binary | use only if the update mechanism is undesirable
-$certtype = "ECDSA" # can be either ECDSA or RSA on the latest to-date Freebox DELTA
+$certtype = "ECDSA" # can be either ECDSA or RSA on the latest to-date Freebox DELTA firmware
 $chromeJSONURI = "https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json" # the URI where the chrome JSON is located
 
 ######### routine ######################
